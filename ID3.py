@@ -122,3 +122,10 @@ def evaluate(node, example):
   assigns to the example.
   '''
 
+  tree = node
+  if tree.decision_label == None:
+    return tree.label
+  example_value = example[tree.decision_label]
+  
+  return evaluate(tree.children[example_value], example)
+
