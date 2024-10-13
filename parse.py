@@ -18,3 +18,4 @@ def parse(filename):
     out.append(dict(zip(headers, row)))
 
   return out
+

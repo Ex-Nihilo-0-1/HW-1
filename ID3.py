@@ -1,6 +1,7 @@
 from node import Node
 import math
 import numpy as np
+import parse
 
 
 def ID3(examples, default):
@@ -17,18 +18,19 @@ def ID3(examples, default):
     '''
     return -1*(prob)*np.log2(prob)
   
-  def get_da(attribute:str, value:str):
+  def get_da(attribute:str, value:str, examples):
     '''
     Helper function, computes D_a.
     Takes in an attribute and a value,
     returns a list that contains the examples that 
     have the given value for the given attribute.
     '''
-
+    examples = examples
     d_a = []
     for e in examples:
-      if e[attribute] == value:
-        d_a += [e]
+      if attribute in e.keys():
+        if e[attribute] == value:
+          d_a += [e]
     return d_a
   
   def info_gain(node, attribute:str):
@@ -88,9 +90,8 @@ def ID3(examples, default):
   for e in examples:
     a_star_values += [e[a_star]]
   a_star_values = list(set(a_star_values))
-  print(a_star_values)
   for a in a_star_values:
-    d_a = get_da(a_star, a)
+    d_a = get_da(a_star, a, examples)
     if d_a == []:
       child = Node()
       child.add_label(max_label)
@@ -121,5 +122,3 @@ def evaluate(node, example):
   assigns to the example.
   '''
 
-
-#ee
