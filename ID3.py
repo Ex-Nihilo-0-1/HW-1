@@ -88,17 +88,16 @@ def ID3(examples, default):
   for e in examples:
     a_star_values += [e[a_star]]
   a_star_values = list(set(a_star_values))
-  
+  print(a_star_values)
   for a in a_star_values:
     d_a = get_da(a_star, a)
     if d_a == []:
       child = Node()
       child.add_label(max_label)
-      t.children.add(child)
+      t.children[a] = child
     else:
       for e in d_a:
         del e[a_star]
-      print("adding" + a_star + str(a))
       t.children[a] = ID3(d_a, default)
 
   return t
