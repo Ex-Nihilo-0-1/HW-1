@@ -2,7 +2,7 @@ from node import Node
 import math
 import numpy as np
 import parse
-
+import copy
 
 def ID3(examples, default):
   '''
@@ -61,6 +61,7 @@ def ID3(examples, default):
     return gain
   #END OF HELPER FUNCTIONS SECTION
 
+  # Create a Root node for the tree
   attributes = list(examples[0].keys())[:-1]
   t = Node()
 
@@ -70,14 +71,18 @@ def ID3(examples, default):
   max_label = max(set(class_values), key = class_values.count)  #finds the mode of Class values
   t.add_label(max_label)
 
+  # If all Examples are positive, Return the single-node tree Root, with label= - 
+  # If all Examples are negative, Return the single-node tree Root, with label =-
   if set(class_values) == {'1'}:
     return t
   if set(class_values) == {'0'}:
     return t
   
+  # If Attributes is empty, Return the single-node tree Root, with label = most common value of Target_attribute in Examples
   if attributes == []:
     return t
   
+
   max_gain = info_gain(t, attributes[0])
   a_star = attributes[0]
   for a in attributes:
@@ -125,7 +130,10 @@ def evaluate(node, example):
   tree = node
   if tree.decision_label == None:
     return tree.label
-  example_value = example[tree.decision_label]
-  
-  return evaluate(tree.children[example_value], example)
-
+  else:
+    example_value = example[tree.decision_label]
+    if example_value in tree.children:
+        return evaluate(tree.children[example_value], example)
+    else:
+        # Return the current node's label if the child doesn't exist
+        return tree.label
