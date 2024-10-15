@@ -16,6 +16,8 @@ def ID3(examples, default):
     '''
     Helper function, computes entropy.
     '''
+    if prob == 0 or prob == 1:
+        return 0
     return -1*(prob)*np.log2(prob)
   
   def get_da(attribute:str, value:str, examples):
@@ -37,30 +39,51 @@ def ID3(examples, default):
     '''
     Helper function, computes info gain. 
     '''
-    possible_values = []
-    label_count = 0                   
-    total_count = len(examples)         
-    for e in examples:  
-      possible_values += [e[attribute]]
-      if e['Class'] == node.label:
-        label_count += 1
-    keys = set(possible_values)
-
-    count_dict = dict.fromkeys(keys, 0)
-    for v in list(set(possible_values)):
-      for e in examples:
-        if e[attribute] == v:
-          count_dict[v] += 1
     
-    h_node = h(label_count/total_count) + h(1-(label_count/total_count))
-    h_children = 0
-    for k in list(count_dict.keys()):
-      h_children += h(count_dict[k]/total_count)
-    gain = h_node - h_children
+    # return gain
+    total_count = len(examples)
+    if total_count == 0:
+        return 0
 
+    # Calculate entropy of the parent node
+    label_counts = {}
+    for e in examples:
+        label = e['Class']
+        label_counts[label] = label_counts.get(label, 0) + 1
+    h_node = 0
+    for count in label_counts.values():
+        prob = count / total_count
+        h_node += h(prob)
+
+    # Calculate entropy of the children nodes
+    value_counts = {}
+    value_label_counts = {}
+    for e in examples:
+        value = e[attribute]
+        label = e['Class']
+        value_counts[value] = value_counts.get(value, 0) + 1
+        if value not in value_label_counts:
+            value_label_counts[value] = {}
+        value_label_counts[value][label] = value_label_counts[value].get(label, 0) + 1
+
+    h_children = 0
+    for value in value_counts:
+        weight = value_counts[value] / total_count
+        h_value = 0
+        for count in value_label_counts[value].values():
+            prob = count / value_counts[value]
+            h_value += h(prob)
+        h_children += weight * h_value
+
+    gain = h_node - h_children
     return gain
   #END OF HELPER FUNCTIONS SECTION
-
+  
+  if not examples:
+          leaf = Node()
+          leaf.add_label(default)
+          return leaf
+  
   # Create a Root node for the tree
   attributes = list(examples[0].keys())[:-1]
   t = Node()
@@ -102,9 +125,13 @@ def ID3(examples, default):
       child.add_label(max_label)
       t.children[a] = child
     else:
+      d_a_copy = []
       for e in d_a:
-        del e[a_star]
-      t.children[a] = ID3(d_a, default)
+        e_copy = e.copy()
+        del e_copy[a_star]
+        if 'Class' in e_copy:
+          d_a_copy.append(e_copy)
+    t.children[a] = ID3(d_a_copy, default)
 
   return t
 
@@ -114,11 +141,52 @@ def prune(node, examples):
   to improve accuracy on the validation data; the precise pruning strategy is up to you.
   '''
 
+  best_accuracy = test(node, examples)
+  root_node = node  # Keep a reference to the root of the tree
+
+  def prune_node(current_node):
+    nonlocal best_accuracy
+    if current_node.decision_label is None:
+        return  # This is a leaf node
+
+    # Recursively prune child nodes
+    for child in current_node.children.values():
+        prune_node(child)
+
+    # Attempt to prune this node
+    saved_decision_label = current_node.decision_label
+    saved_children = current_node.children
+
+    # Make this node a leaf node
+    current_node.decision_label = None
+    current_node.children = {}
+
+    # Evaluate accuracy after pruning
+    pruned_accuracy = test(root_node, examples)
+
+    if pruned_accuracy >= best_accuracy:
+        # Keep pruning since accuracy has not decreased
+        best_accuracy = pruned_accuracy
+    else:
+        # Restore the original node since pruning did not improve accuracy
+        current_node.decision_label = saved_decision_label
+        current_node.children = saved_children
+
+  prune_node(node)
+
 def test(node, examples):
   '''
   Takes in a trained tree and a test set of examples.  Returns the accuracy (fraction
   of examples the tree classifies correctly).
   '''
+
+  correct = 0
+  total = len(examples)
+  for example in examples:
+      prediction = evaluate(node, example)
+      if prediction == example['Class']:
+          correct += 1
+  return correct / total if total > 0 else 0
 
 
 def evaluate(node, example):
