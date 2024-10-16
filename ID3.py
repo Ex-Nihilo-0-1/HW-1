@@ -94,18 +94,17 @@ def ID3(examples, default):
   max_label = max(set(class_values), key = class_values.count)  #finds the mode of Class values
   t.add_label(max_label)
 
-  # If all Examples are positive, Return the single-node tree Root, with label= - 
-  # If all Examples are negative, Return the single-node tree Root, with label =-
-  if set(class_values) == {'1'}:
+  # If all Examples are positive, Return the single-node tree Root, with positive label= - 
+  # If all Examples are negative, Return the single-node tree Root, with negative label =-
+  if len(set(class_values)) == 1: #if set(class_values) is homogeneous return t
     return t
-  if set(class_values) == {'0'}:
-    return t
+ 
   
   # If Attributes is empty, Return the single-node tree Root, with label = most common value of Target_attribute in Examples
   if attributes == []:
     return t
   
-
+  #find_best_split 
   max_gain = info_gain(t, attributes[0])
   a_star = attributes[0]
   for a in attributes:
@@ -114,6 +113,7 @@ def ID3(examples, default):
       max_gain = info_gain(t, a)
       a_star = a
   t.add_decision_label(a_star)
+
   a_star_values = []
   for e in examples:
     a_star_values += [e[a_star]]
@@ -171,7 +171,9 @@ def prune(node, examples):
         # Restore the original node since pruning did not improve accuracy
         current_node.decision_label = saved_decision_label
         current_node.children = saved_children
-
+ 
+    return 
+  
   prune_node(node)
 
 def test(node, examples):
