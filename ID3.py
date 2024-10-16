@@ -77,6 +77,16 @@ def ID3(examples, default):
 
     gain = h_node - h_children
     return gain
+  
+  def find_best_split(node, attributes):
+    max_gain = info_gain(t, attributes[0])
+    a_star = attributes[0]
+    for a in attributes:
+      gain = info_gain(t, a)
+      if gain > max_gain:
+        max_gain = info_gain(t, a)
+        a_star = a
+    return a_star
   #END OF HELPER FUNCTIONS SECTION
   
   if not examples:
@@ -87,43 +97,36 @@ def ID3(examples, default):
   # Create a Root node for the tree
   attributes = list(examples[0].keys())[:-1]
   t = Node()
-
   class_values = []
   for e in examples: 
     class_values += [e['Class']]
-  max_label = max(set(class_values), key = class_values.count)  #finds the mode of Class values
-  t.add_label(max_label)
+  most_common_class_value = max(set(class_values), key = class_values.count)  #finds the mode of Class values
+  t.add_label(most_common_class_value)
 
   # If all Examples are LABEL, Return the single-node tree Root, with positive label= LABEL 
   if len(set(class_values)) == 1: #if set(class_values) is homogeneous return t
     return t
  
-  
   # If Attributes is empty, Return the single-node tree Root, with label = most common value of Target_attribute in Examples
   if attributes == []:
     return t
   
   #find_best_split 
-  max_gain = info_gain(t, attributes[0])
-  a_star = attributes[0]
-  for a in attributes:
-    ig = info_gain(t, a)
-    if ig > max_gain:
-      max_gain = info_gain(t, a)
-      a_star = a
-  t.add_decision_label(a_star)
 
-  a_star_values = []
-  for e in examples:
-    a_star_values += [e[a_star]]
-  a_star_values = list(set(a_star_values))
-  for a in a_star_values:
-    d_a = get_da(a_star, a, examples)
-    if d_a == []:
+  a_star = find_best_split(t, attributes)     #Find A*, the best label to split this node on
+  t.add_decision_label(a_star)                #Set the decision label of the current node to that
+  a_star_values = []                          #Initialize variable for all possible values of label A*
+  for e in examples:                        
+    a_star_values += [e[a_star]]              
+  a_star_values = list(set(a_star_values))    #Compute all possible values of label A*
+
+  for a in a_star_values:                     #Compute the subset D_a, the items in the training set such that has value a for label A*
+    d_a = get_da(a_star, a, examples)         
+    if d_a == []:                             #If D_a is empty, then ...
       child = Node()
-      child.add_label(max_label)
+      child.add_label(most_common_class_value)
       t.children[a] = child
-    else:
+    else:                                     #If D_a is non-empty, then ...
       d_a_copy = []
       for e in d_a:
         e_copy = e.copy()
