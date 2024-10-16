@@ -94,8 +94,7 @@ def ID3(examples, default):
   max_label = max(set(class_values), key = class_values.count)  #finds the mode of Class values
   t.add_label(max_label)
 
-  # If all Examples are positive, Return the single-node tree Root, with positive label= - 
-  # If all Examples are negative, Return the single-node tree Root, with negative label =-
+  # If all Examples are LABEL, Return the single-node tree Root, with positive label= LABEL 
   if len(set(class_values)) == 1: #if set(class_values) is homogeneous return t
     return t
  
