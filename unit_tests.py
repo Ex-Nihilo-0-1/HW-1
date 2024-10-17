@@ -57,7 +57,8 @@ def testID3AndTest():
     print("testID3andTest failed -- no tree returned.")	
 
 # inFile - string location of the house data file
-def testPruningOnHouseData(inFile):
+def testPruningOnHouseData():
+  inFile = 'house_votes_84.data'
   withPruning = []
   withoutPruning = []
   data = parse.parse(inFile)
@@ -91,3 +92,5 @@ def testPruningOnHouseData(inFile):
   print(withoutPruning)
   print("average with pruning",sum(withPruning)/len(withPruning)," without: ",sum(withoutPruning)/len(withoutPruning))
   
+if __name__ == '__main__':
+  testPruningOnHouseData()
