@@ -4,36 +4,49 @@ import numpy as np
 from ID3 import *
 from pprint import pprint
 
-def learning_curve(data, train_sizes = list(range(10, 310, 20)), num_runs=100):
-
+def learning_curve(data, train_sizes=list(range(10, 310, 20)), num_runs=100):
 
     accuracies_with_pruning = []
     accuracies_without_pruning = []
+
+    total_data_size = len(data)
+    validation_ratio = 0.1  # 10% for validation
+    test_ratio = 0.2        # 20% for testing
 
     for size in train_sizes:
         acc_with_pruning = []
         acc_without_pruning = []
 
-
         for i in range(num_runs):
-            # Shuffle data and split into training and test sets
+            # Shuffle data
             random.shuffle(data)
-            train_data = data[:size]
-            test_data = data[size:]
+
+            # Calculate sizes
+            validation_size = int(validation_ratio * total_data_size)
+            test_size = int(test_ratio * total_data_size)
+            train_size = size
+
+            # Ensure we don't exceed the data size
+            if train_size + validation_size + test_size > total_data_size:
+                continue  # Skip this iteration
+
+            # Split data
+            train_data = data[:train_size]
+            validation_data = data[train_size:train_size + validation_size]
+            test_data = data[train_size + validation_size:train_size + validation_size + test_size]
+
             # Train tree without pruning
             tree = ID3(train_data, default='democrat')
             acc_without_pruning.append(test(tree, test_data))
+
             # Train tree with pruning
             pruned_tree = copy.deepcopy(tree)
-            prune(pruned_tree, test_data) 
+            prune(pruned_tree, validation_data)
             acc_with_pruning.append(test(pruned_tree, test_data))
-            # for example in test_data:
-            #     print(evaluate(tree, example))  # Print predictions for the test examples
-
 
         # Calculate average accuracies for this training size
-        avg_acc_without = np.mean(acc_without_pruning)
-        avg_acc_with = np.mean(acc_with_pruning)
+        avg_acc_without = np.mean(acc_without_pruning) if acc_without_pruning else 0
+        avg_acc_with = np.mean(acc_with_pruning) if acc_with_pruning else 0
 
         # Store the average accuracies
         accuracies_without_pruning.append(avg_acc_without)
@@ -49,8 +62,8 @@ def learning_curve(data, train_sizes = list(range(10, 310, 20)), num_runs=100):
     plt.legend()
     plt.grid(True)
     plt.savefig("./learning_curve.png")
-    plt.close()  
+    plt.close()
+
 if __name__ == "__main__":
     data = parse.parse("house_votes_84.data")
     learning_curve(data)
-
