@@ -142,8 +142,26 @@ def prune(node, examples):
   Takes in a trained tree and a validation set of examples.  Prunes nodes in order
   to improve accuracy on the validation data; the precise pruning strategy is up to you.
   '''
+  if node.children == {}:
+     return
+  threshold = 3
+  decision_label = node.decision_label
+  values = list(node.children.keys())
+  for value in values:
+    d_a = []
+    for e in examples:
+      if decision_label in e.keys():
+        if e[decision_label] == value:
+          d_a += [e]
+    if len(d_a) <= threshold:
+       for e in examples:
+          if value in e.keys():
+            del e[value]
+       del node.children[value]
+  
+  for child in node.children.values():
+     prune(child, examples)
 
-  return
 
 def test(node, examples):
   '''
