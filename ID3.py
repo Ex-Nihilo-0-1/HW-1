@@ -147,36 +147,7 @@ def prune(node, examples):
   root_node = node  # Keep a reference to the root of the tree
 
   def prune_node(current_node):
-    nonlocal best_accuracy
-    if current_node.decision_label is None:
-        return  # This is a leaf node
-
-    # Recursively prune child nodes
-    for child in current_node.children.values():
-        prune_node(child)
-
-    # Attempt to prune this node
-    saved_decision_label = current_node.decision_label
-    saved_children = current_node.children
-
-    # Make this node a leaf node
-    current_node.decision_label = None
-    current_node.children = {}
-
-    # Evaluate accuracy after pruning
-    pruned_accuracy = test(root_node, examples)
-
-    if pruned_accuracy >= best_accuracy:
-        # Keep pruning since accuracy has not decreased
-        best_accuracy = pruned_accuracy
-    else:
-        # Restore the original node since pruning did not improve accuracy
-        current_node.decision_label = saved_decision_label
-        current_node.children = saved_children
- 
-    return 
-  
-  prune_node(node)
+    return
 
 def test(node, examples):
   '''
