@@ -1,4 +1,4 @@
-import ID3, parse, random
+import ID3, parse, random, importlib
 
 def testID3AndEvaluate():
   data = [dict(a=1, b=0, Class=1), dict(a=1, b=1, Class=1)]
@@ -93,4 +93,5 @@ def testPruningOnHouseData():
   print("average with pruning",sum(withPruning)/len(withPruning)," without: ",sum(withoutPruning)/len(withoutPruning))
   
 if __name__ == '__main__':
+  importlib.reload(ID3)
   testPruningOnHouseData()

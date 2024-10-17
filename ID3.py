@@ -143,11 +143,9 @@ def prune(node, examples):
   to improve accuracy on the validation data; the precise pruning strategy is up to you.
   '''
 
-  best_accuracy = test(node, examples)
-  root_node = node  # Keep a reference to the root of the tree
 
   def prune_node(current_node):
-    nonlocal best_accuracy
+    best_accuracy = test(node, examples)
     if current_node.decision_label is None:
         return  # This is a leaf node
 
@@ -164,7 +162,7 @@ def prune(node, examples):
     current_node.children = {}
 
     # Evaluate accuracy after pruning
-    pruned_accuracy = test(root_node, examples)
+    pruned_accuracy = test(node, examples)
 
     if pruned_accuracy >= best_accuracy:
         # Keep pruning since accuracy has not decreased
