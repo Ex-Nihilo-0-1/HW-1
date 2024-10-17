@@ -144,7 +144,7 @@ def prune(node, examples):
   '''
   if node.children == {}:
      return
-  threshold = 3
+  threshold = 5
   decision_label = node.decision_label
   values = list(node.children.keys())
   for value in values:
