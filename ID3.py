@@ -133,7 +133,7 @@ def ID3(examples, default):
         del e_copy[a_star]
         if 'Class' in e_copy:
           d_a_copy.append(e_copy)
-    t.children[a] = ID3(d_a_copy, default)
+      t.children[a] = ID3(d_a_copy, default)
 
   return t
 
@@ -143,11 +143,7 @@ def prune(node, examples):
   to improve accuracy on the validation data; the precise pruning strategy is up to you.
   '''
 
-  best_accuracy = test(node, examples)
-  root_node = node  # Keep a reference to the root of the tree
-
-  def prune_node(current_node):
-    return
+  return
 
 def test(node, examples):
   '''
