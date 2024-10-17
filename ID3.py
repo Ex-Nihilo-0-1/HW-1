@@ -133,7 +133,7 @@ def ID3(examples, default):
         del e_copy[a_star]
         if 'Class' in e_copy:
           d_a_copy.append(e_copy)
-    t.children[a] = ID3(d_a_copy, default)
+      t.children[a] = ID3(d_a_copy, default)
 
   return t
 
