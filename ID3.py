@@ -175,11 +175,10 @@ def prune(node, examples):
 
     # Evaluate accuracy after pruning
     pruned_accuracy = test(root_node, examples)
-    print("Pruned Accuracy = ", pruned_accuracy, "Best Accuracy = ", best_accuracy)
-    if pruned_accuracy >= best_accuracy:
+    #if pruned_accuracy >= best_accuracy:
         # Keep pruning since accuracy has not decreased
-        best_accuracy = pruned_accuracy
-    else:
+        #best_accuracy = pruned_accuracy
+    if pruned_accuracy < best_accuracy:
         # Restore the original node since pruning did not improve accuracy
         current_node.decision_label = saved_decision_label
         current_node.children = saved_children
