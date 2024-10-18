@@ -21,7 +21,7 @@ def ID3(input_examples: list[dict], default):
             return 0
         return -1 * freq * np.log2(freq)
 
-    def get_da(attribute: str, value: str, examples: list[dict]) -> list[dict]:
+    def get_da(attribute: str, value: str, examples: list[dict]) -> list:
         '''
         Helper function, computes D_a.
         Takes in an attribute and a value,
@@ -30,6 +30,8 @@ def ID3(input_examples: list[dict], default):
         '''
         d_a = []
         for e in examples:
+            if attribute not in e:
+                return []
             if e[attribute] == value:
                 d_a.append(e)
         return d_a
@@ -123,26 +125,31 @@ def ID3(input_examples: list[dict], default):
     a_star = find_best_split(input_examples, attributes)
     root = Node()
     root.add_decision_label(a_star)
+    root.add_data(input_examples)
 
     # For each value of the best attribute, create a subtree
     a_star_values = possible_values_getter(a_star, input_examples)
+    print(a_star_values)
     for value in a_star_values:
         d_a = get_da(a_star, value, input_examples)
-        if not d_a:
+        print("D_a", d_a)
+        print("A*", a_star)
+        print("A* = ", value)
+        if d_a == []:
             child = Node()
             most_common_class_value = max(set(class_values), key=class_values.count)
             child.add_label(most_common_class_value)
             root.children[value] = child
         else:
-            d_a_trimmed = []
-            for e in d_a:
-                e_copy = copy.copy(e)
-                del e_copy[a_star]
-                d_a_trimmed.append(e_copy)
-            child = ID3(d_a_trimmed, default)
+            for d in d_a:
+                del d[a_star]
+            child = ID3(d_a, default)
             root.children[value] = child
 
     return root
+
+
+
 
 
 def prune(node, examples):
@@ -150,54 +157,10 @@ def prune(node, examples):
   Takes in a trained tree and a validation set of examples.  Prunes nodes in order
   to improve accuracy on the validation data; the precise pruning strategy is up to you.
   '''
-
-
-  root_node = node  # Keep a reference to the root of the tree
-
-  def prune_node(current_node):
-    best_accuracy = test(root_node, examples)
-    def get_majority_label(node):
-      labels = []
-      def collect_labels(current_node):
-          if current_node.decision_label is None:
-              labels.append(current_node.label)
-          else:
-              for child in current_node.children.values():
-                  collect_labels(child)
-
-      collect_labels(node)
-      return max(set(labels), key=labels.count)
-
-    
-    if current_node.decision_label is None:
-        return  # This is a leaf node
-
-    # Recursively prune child nodes
-    for child in current_node.children.values():
-        prune_node(child)
-
-    # Attempt to prune this node
-    saved_decision_label = current_node.decision_label
-    saved_children = current_node.children
-
-    # Make this node a leaf node
-    current_node.decision_label = None
-    current_node.label = get_majority_label(current_node)  # Set the label to the majority class of the subtree
-    current_node.children = {}
-
-    # Evaluate accuracy after pruning
-    pruned_accuracy = test(root_node, examples)
-    #if pruned_accuracy >= best_accuracy:
-        # Keep pruning since accuracy has not decreased
-        #best_accuracy = pruned_accuracy
-    if pruned_accuracy < best_accuracy:
-        # Restore the original node since pruning did not improve accuracy
-        current_node.decision_label = saved_decision_label
-        current_node.children = saved_children
  
-    return 
-  
-  prune_node(root_node)
+    
+    
+
 
 def test(node, examples):
   '''
@@ -231,5 +194,3 @@ def evaluate(node, example):
         # Return the current node's label if the child doesn't exist
         return tree.label
 
-examples =  parse.parse("cars_train.data")
-t = ID3(examples, 0)
