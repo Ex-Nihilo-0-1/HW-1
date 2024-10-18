@@ -12,13 +12,14 @@ We use this strategy because it's a simple solution that provided the best stabi
 
 # 3. 
 
-We choose the strategy reduced error pruning because it has a simple heuristic and has reliable generalization performance. Its good for situation with limited data and handles small data sets well.
+We choose the strategy reduced error pruning because it has a simple heuristic and has reliable generalization performance. Its good for situation with limited data and handles small data sets well. 
 
 # 4.
 ![Project logo](4.jpg)
 
-We're still investigating the reason why at every sample size, the pruned accuracy is lower than the accuracy before pruning. We've looked closely at our code, but haven't found any explanation yet. 
+(a) We're still investigating the reason why at every sample size, the pruned accuracy is lower than the accuracy before pruning. We've looked closely at our code, but haven't found any explanation yet. 
 
+(b) No idea.
 # 5.
 
 Here's the result
