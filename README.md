@@ -1,22 +1,22 @@
 # HW 1
 
-1. Did you alter the Node data structure? If so, how and why?
+#1. Did you alter the Node data structure? If so, how and why?
 
 We did alter the Node data structure. We added `self.decision_label` in the node's init function and added two helper function: `add_label` and `add_decision_label`.
 
 We have these two function so that we can use the add_label function for all the leaf node in the decision tree, and `add_decision_label` for nodes that are not terminal and are used to determine which attribute will be used for that node.
 
-2. How did you handle missing attributes, and why did you choose this strategy?
+#2. How did you handle missing attributes, and why did you choose this strategy?
 
 We handle missing attribute by either skipping it upon detection or create substitute attributes using the most common class label to fill them. 
 
 We use this strategy because it's a simple solution that provided the best stability.
 
-3. How did you perform pruning, and why did you choose this strategy?
+#3. How did you perform pruning, and why did you choose this strategy?
 
 We choose the strategy reduced error pruning because it has a simple heuristic and has reliable generalization performance. Its good for situation with limited data and handles small data sets well.
 
-6. 
+#6. 
 Design of random forest:
 We chose to train 10 trees in the forest because the dataset for candy is not large, so ten trees is a suitable number of trees to balance the cost and performance.
 Each tree is trained on a sample of the original dataset, which creates different subsets for training. We are using the random feature to increase the accuracy. Random features will help reduce the correlation which can reduce overfitting. Each tree randomly selects the features to split the node, which will make the forest more robust. For the prediction, we used the ID3 algorithm to train each tree and did the comparison based on information gain, which can lead to more effective classification.
