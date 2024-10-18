@@ -12,7 +12,9 @@ We handle missing attribute by either skipping it upon detection or create subst
 
 We use this strategy because it's a simple solution that provided the best stability.
 
+3. How did you perform pruning, and why did you choose this strategy?
 
+We choose the strategy reduced error pruning because it has a simple heuristic and has reliable generalization performance. Its good for situation with limited data and handles small data sets well.
 
 6. 
 Design of random forest:
