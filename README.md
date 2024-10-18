@@ -16,6 +16,26 @@ We use this strategy because it's a simple solution that provided the best stabi
 
 We choose the strategy reduced error pruning because it has a simple heuristic and has reliable generalization performance. Its good for situation with limited data and handles small data sets well.
 
+# 5.
+
+Here's the result
+
+```
+training accuracy:  1.0
+validation accuracy:  0.7714285714285715
+test accuracy:  0.8571428571428571
+pruned tree train accuracy:  0.805
+pruned tree validation accuracy:  0.7714285714285715
+pruned tree test accuracy:  0.7714285714285715
+no pruning test accuracy:  0.8571428571428571
+```
+
+As you can see, the training accuracy reached 1.0.
+
+The 100% training accuracy indicates overfitting, where the model learns both the patterns and noise of the training data, leading to lower performance on unseen data.
+
+After prunning, we encountered slightly lower accuracy compared to the unpruned model on the test set. Theoretically prunned data should provided better balance between generalization and performance, but we are also baffled as to the reason why pruned data cause consistent lower accuracy on testing data
+
 #6. 
 Design of random forest:
 We chose to train 10 trees in the forest because the dataset for candy is not large, so ten trees is a suitable number of trees to balance the cost and performance.
