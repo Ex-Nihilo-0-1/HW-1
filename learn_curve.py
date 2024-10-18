@@ -65,5 +65,5 @@ def learning_curve(data, train_sizes=list(range(10, 310, 20)), num_runs=100):
     plt.close()
 
 if __name__ == "__main__":
-    data = parse.parse("house_votes_84.data")
+    data = parse.parse("tennis.data")
     learning_curve(data)

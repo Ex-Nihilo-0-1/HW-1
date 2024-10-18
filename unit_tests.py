@@ -44,6 +44,7 @@ def testID3AndTest():
       print("testing on train data failed.")
       fails = fails + 1
     acc = ID3.test(tree, testData)
+    print(acc)
     if acc == 0.75:
       print("testing on test data succeeded.")
     else:
@@ -57,7 +58,8 @@ def testID3AndTest():
     print("testID3andTest failed -- no tree returned.")	
 
 # inFile - string location of the house data file
-def testPruningOnHouseData(inFile):
+def testPruningOnHouseData(): #inFile
+  inFile = 'house_votes_84.data'
   withPruning = []
   withoutPruning = []
   data = parse.parse(inFile)
@@ -90,4 +92,44 @@ def testPruningOnHouseData(inFile):
   print(withPruning)
   print(withoutPruning)
   print("average with pruning",sum(withPruning)/len(withPruning)," without: ",sum(withoutPruning)/len(withoutPruning))
+
+
+def testPruningOnCarData(): #inFile
+  withPruning = []
+  withoutPruning = []
+  for i in range(100):
+    train = parse.parse('cars_train.data')
+    valid = parse.parse('cars_valid.data')
+    test = parse.parse('cars_test.data')
+    tree = ID3.ID3(train, 'unacc')
+    acc = ID3.test(tree, train)
+    print("training accuracy: ",acc)
+    acc = ID3.test(tree, valid)
+    print("validation accuracy: ",acc)
+    acc = ID3.test(tree, test)
+    print("test accuracy: ",acc)
+
+    ID3.prune(tree, valid)
+    acc = ID3.test(tree, train)
+    print("pruned tree train accuracy: ",acc)
+    acc = ID3.test(tree, valid)
+    print("pruned tree validation accuracy: ",acc)
+    acc = ID3.test(tree, test)
+    print("pruned tree test accuracy: ",acc)
+    withPruning.append(acc)
+    tree = ID3.ID3(train+valid, 'democrat')
+    acc = ID3.test(tree, test)
+    print("no pruning test accuracy: ",acc)
+    withoutPruning.append(acc)
+
+  print(withPruning)
+  print(withoutPruning)
+  print("average with pruning",sum(withPruning)/len(withPruning)," without: ",sum(withoutPruning)/len(withoutPruning))
+
   
+if __name__ == '__main__':
+  # testID3AndEvaluate()
+  # testPruning()
+  # testID3AndTest()
+  # testPruningOnHouseData()
+  testPruningOnCarData()

@@ -1,4 +1,4 @@
-import ID3, parse, random
+import ID3, parse, random, traceback
 
 def mini_grader():
 
@@ -75,6 +75,7 @@ def mini_grader():
     else:
       print("ID3 test 4 failed -- no tree returned")
   except Exception:
+    traceback.print_exc()
     print("ID3 test 4 failed runtime error")
 
 
