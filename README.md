@@ -22,6 +22,7 @@ We chose to train 10 trees in the forest because the dataset for candy is not la
 Each tree is trained on a sample of the original dataset, which creates different subsets for training. We are using the random feature to increase the accuracy. Random features will help reduce the correlation which can reduce overfitting. Each tree randomly selects the features to split the node, which will make the forest more robust. For the prediction, we used the ID3 algorithm to train each tree and did the comparison based on information gain, which can lead to more effective classification.
 
 Accuracy comparison:
+
 ID3 Decision Tree Accuracy: 47.06%
 Random Forest Accuracy: 82.35%
 
