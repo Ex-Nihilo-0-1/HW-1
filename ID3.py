@@ -13,13 +13,13 @@ def ID3(input_examples: list[dict], default):
     Any missing attributes are denoted with a value of "?"
     '''
 #---------------------------HELPER FUNCTIONS SECTION---------------------------------
-    def h(prob: float) -> float:
+    def h(freq: float) -> float:
         '''
         Helper function, computes entropy.
         '''
-        if prob == 0 or prob == 1:
+        if freq == 0 or freq == 1:
             return 0
-        return -1 * prob * np.log2(prob)
+        return -1 * freq * np.log2(freq)
 
     def get_da(attribute: str, value: str, examples: list[dict]) -> list[dict]:
         '''
@@ -33,47 +33,59 @@ def ID3(input_examples: list[dict], default):
             if e[attribute] == value:
                 d_a.append(e)
         return d_a
-
-    def info_gain(examples: list[dict], attribute: str) -> float:
+    
+    def possible_values_getter(attribute: str, examples: list[dict]) -> list:
         '''
-        Helper function, computes info gain. 
+        given an attribute return a list of all possible values of e[attribute], 
+        where e is an entry in examples
         '''
-        examples_count = len(examples)
-        if examples_count == 0:
-            return 0
-
-        # Calculate entropy of the parent node
+        values = [e[attribute] for e in examples]
+        return list(set(values))
+    
+    def node_classifier(examples):
+        '''
+        Given data, sort them by their values of 'Class', so that a dictionary like
+        {V1: number of entries whose 'Class' value is V1, V2: number of entry whose 'Class' value is V2...} 
+        is returned.
+        '''
         class_values_count = {}
         for e in examples:
             value = e['Class']
             class_values_count[value] = class_values_count.get(value, 0) + 1
 
+        return class_values_count
+
+    def info_gain(examples: list[dict], attribute: str) -> float:
+        '''
+        Helper function, computes info gain. 
+        '''
+
+        if len(examples) == 0:
+            return 0
+
+        # Calculate entropy of the parent node
+        class_values_countup = node_classifier(examples)
+        
         h_parent = 0
-        for count in class_values_count.values():
-            prob = count / examples_count
-            h_parent += h(prob)
+
+        for count in class_values_countup.values():
+            freq = count / len(examples)
+            h_parent += h(freq)
 
         # Calculate entropy of the children nodes
-        
-        attributes_split_by_class = {}
-        for e in examples:
-            attribute_value = e[attribute]
-            class_value = e['Class']
-            if attribute_value not in attributes_split_by_class.values():
-                attributes_split_by_class[attribute_value] = {}
-            attributes_split_by_class[attribute_value][class_value] = attributes_split_by_class[attribute_value].get(class_value, 0) + 1
-
+        possible_values = possible_values_getter(attribute, examples)
         h_children = 0
-        for key in attributes_split_by_class:
-            weight = sum(attributes_split_by_class[key].values())/ examples_count
-            h_value = 0
-            for count in attributes_split_by_class[key].values():
-                prob = count / sum(attributes_split_by_class[key].values())
-                h_value += h(prob)
-            h_children += weight * h_value
+        for v in possible_values:
+            d_a = get_da(attribute, v, examples)
+            class_values_countup = node_classifier(d_a)
+            my_h = 0
+            for v in class_values_countup.values():
+                freq = v / sum(class_values_countup.values())
+                my_h += h(freq)
+            h_children += my_h
+            
 
-        gain = h_parent - h_children
-        return gain
+        return h_parent - h_children
 
     def find_best_split(examples: list[dict], attributes: list[str]) -> str:
         max_gain = info_gain(examples, attributes[0])
@@ -93,7 +105,7 @@ def ID3(input_examples: list[dict], default):
         return leaf
 
     # If all examples have the same class label, return a leaf node with that label
-    class_values = [e['Class'] for e in input_examples]
+    class_values = possible_values_getter('Class', input_examples)
     if len(set(class_values)) == 1:
         leaf = Node()
         leaf.add_label(class_values[0])
@@ -113,7 +125,7 @@ def ID3(input_examples: list[dict], default):
     root.add_decision_label(a_star)
 
     # For each value of the best attribute, create a subtree
-    a_star_values = set(e[a_star] for e in input_examples)
+    a_star_values = possible_values_getter(a_star, input_examples)
     for value in a_star_values:
         d_a = get_da(a_star, value, input_examples)
         if not d_a:
@@ -122,12 +134,12 @@ def ID3(input_examples: list[dict], default):
             child.add_label(most_common_class_value)
             root.children[value] = child
         else:
-            d_a_copy = []
+            d_a_trimmed = []
             for e in d_a:
                 e_copy = copy.copy(e)
                 del e_copy[a_star]
-                d_a_copy.append(e_copy)
-            child = ID3(d_a_copy, default)
+                d_a_trimmed.append(e_copy)
+            child = ID3(d_a_trimmed, default)
             root.children[value] = child
 
     return root
