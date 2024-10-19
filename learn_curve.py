@@ -41,7 +41,7 @@ def learning_curve(data, train_sizes=list(range(10, 310, 20)), num_runs=100):
 
             # Train tree with pruning
             pruned_tree = copy.deepcopy(tree)
-            prune(pruned_tree, validation_data)
+            pruned_tree = prune(pruned_tree, validation_data)
             acc_with_pruning.append(test(pruned_tree, test_data))
 
         # Calculate average accuracies for this training size

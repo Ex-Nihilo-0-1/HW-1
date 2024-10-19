@@ -58,7 +58,7 @@ def testID3AndTest():
 
 # inFile - string location of the house data file
 def testPruningOnHouseData():
-  inFile = 'house_votes_84.data'
+  inFile = 'tennis.data'
   withPruning = []
   withoutPruning = []
   data = parse.parse(inFile)
@@ -76,7 +76,7 @@ def testPruningOnHouseData():
     acc = ID3.test(tree, test)
     print("test accuracy: ",acc)
   
-    ID3.prune(tree, valid)
+    tree = ID3.prune(tree, valid)
     acc = ID3.test(tree, train)
     print("pruned tree train accuracy: ",acc)
     acc = ID3.test(tree, valid)
