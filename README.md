@@ -31,13 +31,16 @@ This strategy is justified by the fact that we have a good learning curve (see s
 # 4.
 ![Project logo](learning_curve.png)
 
-(a) As the size of the data set increases, the general trend is that both the accuracy with pruning and accuracy without pruning increase. 
+At each size, the data is shuffled every time the program is run. The sizes of validation set and test set are kept constant.
 
-This makes sense because: (1) Intuitively, the bigger the data set, the better are the three parts of it at representing the ground truth. (2) Assuming that the same limit applies to how well the these parts represent the ground truth, the bigger the data set is, the more similar are the parts to the limit and each other in how they fare in representing the ground truth.  
+(i) The two accuracies seem to steadily increase. Think of the training set as sampled data, and the whole data set as all the data points in the universe. Then it is obvious that the bigger the traning set, then the more extensive and representative is the sampling, hence less likely there are outliers in the test set. (Suppose that you've observed 4/5 of the swans in the world, then it is much less likely that you'll say "all swans are white" compared to someone who's only seen 100 swans in their life).
 
-(b) No idea.
+(ii) The advantage, measured as the difference between the two accuracies, seems to decrease. Because, pruning can be seen as reducing bias of a hypothesis, and the bigger the training set, the more extensive is the sampling, and hence less likely is the sampling biased. 
+
 # 5.
+![Project logo](5.png)
 
+After pruning, the accuracy on train_data decreases: this is because before pruning, the model overfits the training set. The accuracy on valid_data increases: this is obvious, since the program prunes the tree with reference to how well it fits validation set. The accuracy on test_set remains the same. This is non-surprising: the data set is very small.  
 
 
 # 6. 
