@@ -13,10 +13,7 @@ We have these two function so that we can use the add_label function for all the
 
 # 2. 
 
-We handle missing attribute by either skipping it upon detection or create substitute attributes using the most common class label to fill them. 
-
-We use this strategy because it's a simple solution that provided the best stability.
-
+We left missing attribute as it is. This is because the algorithm still works with doing so and the learning curve looks alright despite the training data contains data with missing attributes. When it comes to missing attributes in test sets, we treated the missing attribute as the first value of the same label (see `ID3.test()`)  
 # 3. 
 
 We choose the strategy reduced error pruning because it has a simple heuristic and has reliable generalization performance. Its good for situation with limited data and handles small data sets well. 
