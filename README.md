@@ -4,7 +4,6 @@ Contrary to the original specification of the program where ID3.pruning() has no
 
   As a result, we also changed ONLY ONE line of code (line 71 in this submission is changed to "tree = ID3.prune(tree, valid)" from "ID3.prune(tree, valid)") in unit_tests.py to make sure unit_test.testPruningOnHouseData() work. 
   
-  Further, because our ID3.pruning() returns the pruned tree, we noticed that it doesn't pass one of the tests for pruning in unit_test.py.
 
 # 1. 
 
