@@ -17,6 +17,7 @@ We left missing attribute as it is. This is because the algorithm still works wi
 # 3. 
 
 The pruning strategy is roughly as follows:
+
 In tree t, for every interior node, n:
 
   (1) Find the corresponding majority class label, l, from the test data. 
