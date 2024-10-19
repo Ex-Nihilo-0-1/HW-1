@@ -7,7 +7,7 @@ Contrary to the original specification of the program where `ID3.pruning()` has 
 
 # 1. 
 
-We did alter the Node data structure. We added `self.decision_label` in the node's init function and added two helper function: `add_label` and `add_decision_label`.
+We did alter the Node data structure. We added `self.decision_label` in the node's init function and added two helper functions: `add_label` and `add_decision_label`.
 
 We have these two function so that we can use the add_label function for all the leaf node in the decision tree, and `add_decision_label` for nodes that are not terminal and are used to determine which attribute will be used for that node.
 
@@ -16,8 +16,12 @@ We have these two function so that we can use the add_label function for all the
 We left missing attribute as it is. This is because the algorithm still works with doing so and the learning curve looks alright where the training data contains data with missing attributes. When it comes to missing attributes in test sets, we treated the missing attribute as the first value of the same label (see `ID3.test()`)  
 # 3. 
 
-We choose the strategy reduced error pruning because it has a simple heuristic and has reliable generalization performance. Its good for situation with limited data and handles small data sets well. 
-
+The pruning strategy is roughly as follows:
+In tree t, for every interior node, n:
+  (1) Find the corresponding majority class label, l, from the test data. 
+  (2) Let t' = t.copy(). Replace the n in t' with node {children: {}, label: l, decision label: None}
+  (3) If ID3.test(t') > ID3.test(t), update t with t'
+This strategy is justified by the fact that we have a good learning curve (see sec. 4 below), and the fact that it works on `cars_train.data, cars_valid.data, cars_test.data`, a small data set.
 # 4.
 ![Project logo](learning_curve.png)
 
