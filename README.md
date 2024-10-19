@@ -29,7 +29,7 @@ In tree t, for every interior node, n:
 This strategy is justified by the fact that we have a good learning curve (see sec. 4 below), and the fact that it works on `cars_train.data, cars_valid.data, cars_test.data`, a small data set.
 
 # 4.
-![Project logo](4.jpg)
+![Project logo](4.png)
 
 At each size, the data is shuffled every time the program is run. The sizes of validation set and test set are kept constant.
 
