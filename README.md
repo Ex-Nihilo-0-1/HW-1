@@ -17,11 +17,16 @@ We left missing attribute as it is. This is because the algorithm still works wi
 # 3. 
 
 The pruning strategy is roughly as follows:
-In tree t, for every interior node, n: \n
+In tree t, for every interior node, n:
+
   (1) Find the corresponding majority class label, l, from the test data. 
+  
   (2) Let t' = t.copy(). Replace the n in t' with node {children: {}, label: l, decision label: None}
+  
   (3) If ID3.test(t') > ID3.test(t), update t with t'
+  
 This strategy is justified by the fact that we have a good learning curve (see sec. 4 below), and the fact that it works on `cars_train.data, cars_valid.data, cars_test.data`, a small data set.
+
 # 4.
 ![Project logo](learning_curve.png)
 
