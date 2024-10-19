@@ -94,10 +94,8 @@ def ID3(data: list[dict], default):
 
     def find_best_split(examples: list[dict], attributes: list[str]) -> str:
         if(attributes == []):
-            #print("ATTRIBUTE EMPTY!")
             return
         if(examples == []):
-            #print("EXAMPLES EMPTY")
             return
         max_gain = info_gain(examples, attributes[0])
         a_star = attributes[0]        #initialize the variable with the first 
@@ -111,13 +109,10 @@ def ID3(data: list[dict], default):
 
 #---------------------------END OF HELPER FUNCTIONS SECTION---------------------------------
    
-    #print("------------")
     if input_examples == []:
         leaf = Node()
         leaf.add_label(default)
         leaf.add_data(input_examples)
-        #print("EXAMPLES EMPTY")
-        #print("----------------")
         return leaf
 
     # If all examples have the same class label, return a leaf node with that label
@@ -126,13 +121,10 @@ def ID3(data: list[dict], default):
         leaf = Node()
         leaf.add_label(class_values[0])
         leaf.add_data(input_examples)
-        #print("HOMOGENEOUS")
-       #print("-----------------")
         return leaf
 
-    #print(len(input_examples))
+
     attributes = [attr for attr in input_examples[0].keys() if attr != 'Class']
-    #print(attributes)
     # If no attributes left to split on, return a leaf node with the most common class label
    
     if attributes == []:
@@ -140,41 +132,30 @@ def ID3(data: list[dict], default):
         most_common_class_value = max(set(class_values), key=class_values.count)
         leaf.add_label(most_common_class_value)
         leaf.add_data(input_examples)
-        #print("NO ATTRIBUTE LEFT TO SPLIT ON")
-        #print("--------------")
         return leaf
 
     # Find the best attribute to split on
     a_star = find_best_split(input_examples, attributes)
-    #print("A* at line 142 is", a_star)
     root = Node()
     root.add_decision_label(a_star)
     root.add_data(input_examples)
 
     # For each value of the best attribute, create a subtree
     a_star_values = possible_values_getter(a_star, input_examples)
-    #print("A* values are:", a_star_values)
     for value in a_star_values:
-        #print("154 FOR LOOP VALUE = ", value)
-        #print("155 SIZE OF EXAMPLE = ", len(input_examples))
         d_a = get_da(a_star, value, input_examples)
-        #print("Size of the D_a just got", len(d_a))
-        #print("A* = ", a_star)
         if d_a == []:
             child = Node()
             most_common_class_value = max(set(class_values), key=class_values.count)
             child.add_label(most_common_class_value)
             child.add_data(d_a)
             root.children[value] = child
-            #print("-----D_a empty-----")
         else:
             d_a_copy = copy.copy(d_a)
             for d in d_a_copy:
                 del d[a_star]
-            #print("Adding Child, D_a size is ", len(d_a))
             child = ID3(d_a, default)
             root.children[value] = child
-    #print("-------------------")
     return root
 
 
@@ -221,11 +202,6 @@ def prune(tree, examples):
   return tree
 
 
-      
-      
-
-      
-
 
 def test(node, examples):
   '''
@@ -252,11 +228,13 @@ def evaluate(node, example):
   if tree.decision_label == None:
     return tree.label
   else:
-    #print(example)
     example_value = example[tree.decision_label]
     if example_value in tree.children:
         return evaluate(tree.children[example_value], example)
     else:
-        # Return the current node's label if the child doesn't exist
-        return tree.label
-
+        #For trivial cases where test data where a value isn't seen in the training set.
+        return evaluate(tree.children[list(tree.children.keys())[0]], example)
+    
+if __name__ == '__main__':
+    pt = PrettyPrintTree(lambda x: list(x.children.values()), lambda x: (str(x.decision_label) + "\n" + str(x.label) + "\n" + str(list(x.children.keys()))))
+    pt(tree)

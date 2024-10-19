@@ -48,6 +48,7 @@ def testID3AndTest():
       print("testing on test data succeeded.")
     else:
       print("testing on test data failed.")
+      print(acc)
       fails = fails + 1
     if fails > 0:
       print("Failures: ", fails)
