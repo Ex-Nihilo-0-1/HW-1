@@ -58,7 +58,7 @@ def testID3AndTest():
 
 # inFile - string location of the house data file
 def testPruningOnHouseData():
-  inFile = 'tennis.data'
+  inFile = 'house_votes_84.data'
   withPruning = []
   withoutPruning = []
   data = parse.parse(inFile)
