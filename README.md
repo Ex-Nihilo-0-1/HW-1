@@ -31,7 +31,7 @@ This strategy is justified by the fact that we have a good learning curve (see s
 # 4.
 ![Project logo](learning_curve.png)
 
-(a) As the size of the data set increases, the general trend is both the accuracy with pruning and accuracy without pruning increase. This makes sense because intuitively, the bigger the data set, the more the training set and the test set are similar in distribution (past a certain threshold, the Law of Large Numbers tells us that they will eventually approximate the same norm.)
+(a) As the size of the data set increases, the general trend is both the accuracy with pruning and accuracy without pruning increase. This makes sense because: (1) Intuitively, the bigger the data set, the better are the training set and the test set at representing the ground truth. (2) Assuming that the same limit applies to how well the test set and the training set represent the ground truth, the bigger the two sets of data are, the closer they are to the limit, and to each other in how they fare in representing the ground truth.   
 
 (b) No idea.
 # 5.
