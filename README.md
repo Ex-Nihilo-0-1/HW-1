@@ -2,7 +2,7 @@
 
 Contrary to the original specification of the program where ID3.pruning() has no return and updates the input tree directly, the same function in our submission returns the pruned tree. This is because we for the life of us couldn't figure out why we cannot use the function, which has a nested helper function in it, to update the tree directly. 
 
-  As a result, we also changed ONLY ONE line of code (line 71 in this submission is changed to "tree = ID3.prune(tree, valid)" from "ID3.prune(tree, valid)") in unit_tests.py to make sure unit_test.testPruningOnHouseData() work. 
+  As a result, we also changed ONLY ONE line of code (line 71 in this submission is changed to `tree = ID3.prune(tree, valid)` from `ID3.prune(tree, valid)`) in unit_tests.py to make sure unit_test.testPruningOnHouseData() work. 
   
 
 # 1. 
