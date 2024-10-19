@@ -1,3 +1,5 @@
+# Notice that compared to the original specification of the program, the ID3.pruning() in our submission returns the pruned tree. This is because we for the life of us cannot figure out why we cannot use the function, which has a nested helper function in it, to update the tree variable outside of it. Therefore, we also changed ONLY ONE line of code (line 71 in this submission is changed to "tree = ID3.prune(tree, valid)" from "ID3.prune(tree, valid)") in unit_tests.py to make sure unit_test.testPruningOnHouseData() work. Because our ID3.pruning() returns the pruned tree, we noticed that it doesn't pass one of the tests for pruning in unit_test.py.
+
 # 1. 
 
 We did alter the Node data structure. We added `self.decision_label` in the node's init function and added two helper function: `add_label` and `add_decision_label`.
@@ -22,23 +24,7 @@ We choose the strategy reduced error pruning because it has a simple heuristic a
 (b) No idea.
 # 5.
 
-Here's the result
 
-```
-training accuracy:  1.0
-validation accuracy:  0.7714285714285715
-test accuracy:  0.8571428571428571
-pruned tree train accuracy:  0.805
-pruned tree validation accuracy:  0.7714285714285715
-pruned tree test accuracy:  0.7714285714285715
-no pruning test accuracy:  0.8571428571428571
-```
-
-As you can see, the training accuracy reached 1.0.
-
-The 100% training accuracy indicates overfitting, where the model learns both the patterns and noise of the training data, leading to lower performance on unseen data.
-
-After prunning, we encountered slightly lower accuracy compared to the unpruned model on the test set. Theoretically prunned data should provided better balance between generalization and performance, but we are also baffled as to the reason why pruned data cause consistent lower accuracy on testing data
 
 # 6. 
 Design of random forest:
