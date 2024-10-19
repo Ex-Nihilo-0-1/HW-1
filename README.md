@@ -31,7 +31,7 @@ This strategy is justified by the fact that we have a good learning curve (see s
 # 4.
 ![Project logo](learning_curve.png)
 
-(a) We're still investigating the reason why at every sample size, the pruned accuracy is lower than the accuracy before pruning. We've looked closely at our code, but haven't found any explanation yet. 
+(a) As the size of the data set increases, the general trend is both the accuracy with pruning and accuracy without pruning increase. This makes sense because intuitively, the bigger the data set, the more the training set and the test set are similar in distribution (past a certain threshold, the Law of Large Numbers tells us that they will eventually approximate the same norm.)
 
 (b) No idea.
 # 5.
