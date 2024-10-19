@@ -195,7 +195,6 @@ def prune(tree, examples):
         
     if test(tree, examples) < test(saved_tree, examples):
         tree = saved_tree
-
     return
   
   rec_prune(tree, [])
@@ -235,6 +234,3 @@ def evaluate(node, example):
         #For trivial cases where test data where a value isn't seen in the training set.
         return evaluate(tree.children[list(tree.children.keys())[0]], example)
     
-if __name__ == '__main__':
-    pt = PrettyPrintTree(lambda x: list(x.children.values()), lambda x: (str(x.decision_label) + "\n" + str(x.label) + "\n" + str(list(x.children.keys()))))
-    pt(tree)

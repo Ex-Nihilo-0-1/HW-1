@@ -3,7 +3,7 @@ import random
 
 class randomForest:
     #initiliaze the tree and max numbers
-    def __init__(self, tree_numbers = 10, max_feature = None ):
+    def __init__(self, tree_numbers = 100, max_feature = None ):
         self.tree_numbers = tree_numbers
         self.trees = []
         self.max_feature = max_feature
